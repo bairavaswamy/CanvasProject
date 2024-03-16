@@ -18,6 +18,18 @@ const all = canvas.getContext("2d");
 // all.lineTo(50,300);
 // all.strokeStyle= "#ff00ff"
 // all.stroke();
+const mouse = {
+    x : undefined,
+    y : undefined
+}
+
+window.addEventListener("mousemove",function(event){
+    mouse.x = event.x
+    mouse.y = event.y
+    console.log(mouse)
+
+})
+
 
 function Circle(x,y,dx,dy,radius,color){
     this.x = x;
@@ -30,8 +42,9 @@ function Circle(x,y,dx,dy,radius,color){
     this.draw = function(){
         all.beginPath();
         all.arc(this.x,this.y,this.radius,0,Math.PI*2,false);
-        all.strokeStyle = this.color;
         all.stroke()
+        all.fillStyle = this.color
+        all.fill()
     }
 
     this.anime = function(){
@@ -43,14 +56,24 @@ function Circle(x,y,dx,dy,radius,color){
         }
         this.x += this.dx
         this.y += this.dy
+
+        if(mouse.x - this.x < 50 && mouse.x - this.x > -50 &&
+            mouse.y- this.y < 50 && mouse.y - this.y > -50){
+            if(this.radius <40){
+                this.radius += 1;
+            } 
+        }else if(this.radius >2){
+            this.radius -= 1
+        }
+
         this.draw()
     }
 }
 
 const arrayCicles = []
 
-for(let i =0;i<200;i++){
-    let radius = Math.random() * 30;
+for(let i =0;i<1000;i++){
+    let radius =  20;
     let x = Math.random() * (innerWidth-radius * 2) + radius;
     let y =  Math.random() * (innerHeight-radius*2) + radius;
     let dx = (Math.random() - 0.5) ;
@@ -65,6 +88,7 @@ for(let i =0;i<200;i++){
 function animate(){
     requestAnimationFrame(animate)
     all.clearRect(0,0,innerWidth,innerHeight);
+
     for(let i=0;i<arrayCicles.length;i++){
         arrayCicles[i].anime();
     }
